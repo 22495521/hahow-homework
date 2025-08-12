@@ -5,7 +5,16 @@
       "Bash(npm init:*)",
       "Bash(npm install:*)",
       "Bash(git add:*)",
-      "Bash(npm run type-check:*)"
+      "Bash(npm run type-check:*)",
+      "Bash(mkdir:*)",
+      "Bash(npm test)",
+      "Bash(npm test:*)",
+      "Bash(mv:*)",
+      "Bash(npm run dev:*)",
+      "Bash(curl:*)",
+      "Bash(npx jest:*)",
+      "Bash(npm ls:*)",
+      "Bash(npm run build:*)"
     ],
     "deny": [],
     "ask": []

@@ -1,11 +1,18 @@
+import axios from 'axios';
+import { AxiosError } from '../errors/AxiosError';
+import { ServiceError } from '../errors/ServiceError';
+
 class HeroService {
   async getHeroes(): Promise<any> {
-    return 'getHeroes message';
+    try {
+      const response = await axios.get(`${process.env.HAHOW_API_URL}/heroes`);
+      return response.data;
+    } catch (error: any) {
+      throw error;
+    }
   }
 
-  async getHeroById(): Promise<any> {
-    return 'getHeroById message';
-  }
+  async getHeroById(heroId: string): Promise<any> {}
 }
 
 export const heroService = new HeroService();

@@ -27,8 +27,8 @@ export const getHeroById = async (
     //   return sendError(res, '英雄 ID 不能為空', 400);
     // }
 
-    const hero = await heroService.getHeroById();
-    sendSuccess(res, hero);
+    // const hero = await heroService.getHeroById();
+    sendSuccess(res, 123);
   } catch (error) {
     next(error);
   }

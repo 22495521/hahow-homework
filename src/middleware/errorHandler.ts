@@ -1,5 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { sendError } from '../utils/response';
+import { AxiosError } from '../errors/AxiosError';
+import { ServiceError } from '../errors/ServiceError';
 
 export const errorHandler = (
   err: any,
@@ -7,15 +9,24 @@ export const errorHandler = (
   res: Response,
   next: NextFunction
 ): void => {
-  console.error(err.stack);
-
-  // Axios 錯誤
-  if (err.response?.status === 404) {
-    return sendError(res, '英雄不存在', 404);
+  if (process.env.NODE_ENV !== 'test') {
+    console.error(err.stack);
   }
 
-  if (err.response?.status) {
-    return sendError(res, '上游 API 錯誤', err.response.status >= 500 ? 502 : err.response.status);
+  // ServiceError 錯誤處理
+  if (err instanceof ServiceError) {
+    return sendError(res, err.message, err.status);
+  }
+
+  // AxiosError 錯誤處理
+  if (err instanceof AxiosError) {
+    return sendError(res, err.message, err.getHttpStatus());
+  }
+
+  // 原生 axios 錯誤轉換
+  if (AxiosError.isAxiosError(err)) {
+    const axiosError = new AxiosError(err);
+    return sendError(res, axiosError.message, axiosError.getHttpStatus());
   }
 
   // 預設錯誤
