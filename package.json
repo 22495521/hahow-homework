@@ -1,0 +1,39 @@
+{
+  "name": "hahow-homework",
+  "version": "1.0.0",
+  "description": "本專案為 Hahow Backend Engineer 徵才測驗，使用 Node.js + TypeScript 實作 API server，串接 Hahow 提供的上游 API，依驗證狀態回傳不同的資料內容。",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "dev": "npm run build && node dist/index.js",
+    "build": "tsc",
+    "test": "jest",
+    "lint": "eslint . --ext .js,.ts",
+    "lint:fix": "eslint . --ext .js,.ts --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "type-check": "tsc --noEmit"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/22495521/hahow-homework.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/22495521/hahow-homework/issues"
+  },
+  "homepage": "https://github.com/22495521/hahow-homework#readme",
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^8.39.1",
+    "@typescript-eslint/parser": "^8.39.1",
+    "eslint": "^9.33.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.4",
+    "prettier": "^3.6.2"
+  }
+}
