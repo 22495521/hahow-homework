@@ -13,21 +13,21 @@
 
 ### 已驗證 API
 
-- **GET /heroes**（帶 `Name` 與 `Password` header 並驗證成功）：回傳所有英雄資料 + `profile`
-- **GET /heroes/:heroId**（帶 `Name` 與 `Password` header 並驗證成功）：回傳單一英雄資料 + `profile`
+驗證方式：在 HTTP header 中帶入 `Name: hahow` 與 `Password: rocks`
+
+- **GET /heroes**：回傳所有英雄資料 + `profile`（str, int, agi, luk）
+- **GET /heroes/:heroId**：回傳單一英雄資料 + `profile`（str, int, agi, luk）
 
 ---
 
-## 文件索引
+## 技術架構
 
-本專案詳細文件放在 [docs/](docs/) 資料夾中：
-
-- [API 規格](docs/API_SPEC.md)
-- [系統架構](docs/ARCHITECTURE.md)
-- [邊界條件處理](docs/EDGE_CASES.md)
-- [開發指南](docs/DEVELOPMENT_GUIDE.md)
-- [Commit 規範](docs/COMMIT_CONVENTION.md)
-- [問題排查](docs/TROUBLESHOOTING.md)
+- **框架**: Node.js + Express.js + TypeScript
+- **驗證中介層**: 檢查 HTTP header 中的 Name/Password
+- **英雄服務**: 串接上游 API 取得英雄資料與能力值
+- **回應處理**: 根據驗證狀態組合回傳資料
+- **輸入驗證**: 使用 Joi 進行資料驗證
+- **安全性**: 使用 helmet 與 CORS 中介層
 
 ---
 
@@ -36,8 +36,23 @@
 ### 本機開發
 
 ```bash
+# 安裝依賴套件
 npm install
+
+# 開發模式啟動（自動重載）
 npm run dev
+
+# 服務將在 http://localhost:3000 啟動
+```
+
+### 生產環境部署
+
+```bash
+# 建置專案
+npm run build
+
+# 啟動服務
+npm start
 ```
 
 ### Docker 部署
@@ -52,3 +67,60 @@ docker run -p 3000:3000 hahow-api
 # 或使用環境變數
 docker run -p 3000:3000 -e PORT=3000 -e NODE_ENV=production hahow-api
 ```
+
+---
+
+## 開發指令
+
+```bash
+# 程式碼檢查
+npm run lint
+
+# 修正程式碼格式
+npm run lint:fix
+
+# 型別檢查
+npm run type-check
+
+# 格式化程式碼
+npm run format
+
+# 檢查格式化
+npm run format:check
+
+# 執行測試
+npm test
+```
+
+---
+
+## API 測試範例
+
+### 未驗證狀態
+
+```bash
+# 取得所有英雄基本資料
+curl http://localhost:3000/heroes
+
+# 取得單一英雄基本資料
+curl http://localhost:3000/heroes/1
+```
+
+### 已驗證狀態
+
+```bash
+# 取得所有英雄完整資料（含 profile）
+curl -H "Name: hahow" -H "Password: rocks" http://localhost:3000/heroes
+
+# 取得單一英雄完整資料（含 profile）
+curl -H "Name: hahow" -H "Password: rocks" http://localhost:3000/heroes/1
+```
+
+---
+
+## 上游 API 資源
+
+- `https://hahow-recruit.herokuapp.com/heroes` - 英雄列表
+- `https://hahow-recruit.herokuapp.com/heroes/:heroId` - 單一英雄基本資料
+- `https://hahow-recruit.herokuapp.com/heroes/:heroId/profile` - 英雄能力值資料
+- `https://hahow-recruit.herokuapp.com/auth` - 驗證端點
