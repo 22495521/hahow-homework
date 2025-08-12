@@ -1,35 +1,19 @@
-# Use Node.js 18 Alpine for smaller image size
-FROM node:18-alpine
+# Build stage
+FROM node:18-alpine AS builder
 
-# Set working directory
 WORKDIR /app
-
-# Copy package files
 COPY package*.json ./
-
-# Install dependencies
-RUN npm ci --only=production
-
-# Copy source code
+RUN npm install
 COPY . .
-
-# Build TypeScript
 RUN npm run build
 
-# Create non-root user for security
-RUN addgroup -g 1001 -S nodejs && \
-    adduser -S hahow -u 1001
+# Production stage
+FROM node:18-alpine
 
-# Change ownership of the app directory
-RUN chown -R hahow:nodejs /app
-USER hahow
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --only=production
+COPY --from=builder /app/dist ./dist
 
-# Expose port
 EXPOSE 3000
-
-# Health check
-HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-    CMD node healthcheck.js
-
-# Start application
-CMD ["npm", "start"]
+CMD ["node", "dist/server.js"]

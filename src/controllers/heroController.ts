@@ -1,0 +1,35 @@
+import { Request, Response, NextFunction } from 'express';
+import { heroService } from '../services/heroService';
+import { sendSuccess, sendError } from '../utils/response';
+
+export const getHeroes = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  try {
+    const heroes = await heroService.getHeroes();
+    sendSuccess(res, heroes);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getHeroById = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  try {
+    const { heroId } = req.params;
+
+    // if (!heroId) {
+    //   return sendError(res, '英雄 ID 不能為空', 400);
+    // }
+
+    const hero = await heroService.getHeroById();
+    sendSuccess(res, hero);
+  } catch (error) {
+    next(error);
+  }
+};

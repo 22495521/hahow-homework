@@ -1,13 +1,5 @@
 # API 規格文件
 
-## 系統架構
-
-```
-[Client] → [Auth Middleware] → [Hero Service] → [Upstream API]
-                ↓
-        [Response Handler] → [Client]
-```
-
 ### 核心組件
 
 - **Authentication Middleware**: Header 驗證處理

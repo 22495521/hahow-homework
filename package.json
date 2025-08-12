@@ -7,7 +7,8 @@
     "doc": "docs"
   },
   "scripts": {
-    "dev": "npm run build && node dist/index.js",
+    "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
+    "start": "npm run build && node dist/server.js",
     "build": "tsc",
     "test": "jest",
     "lint": "eslint . --ext .js,.ts",
@@ -29,11 +30,30 @@
   },
   "homepage": "https://github.com/22495521/hahow-homework#readme",
   "devDependencies": {
+    "@types/helmet": "^0.0.48",
     "@typescript-eslint/eslint-plugin": "^8.39.1",
     "@typescript-eslint/parser": "^8.39.1",
     "eslint": "^9.33.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.4",
-    "prettier": "^3.6.2"
+    "prettier": "^3.6.2",
+    "ts-node-dev": "^2.0.0"
+  },
+  "dependencies": {
+    "@types/axios": "^0.9.36",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.3",
+    "@types/jest": "^30.0.0",
+    "@types/joi": "^17.2.2",
+    "@types/node": "^24.2.1",
+    "axios": "^1.11.0",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.1",
+    "express": "^5.1.0",
+    "helmet": "^8.1.0",
+    "jest": "^30.0.5",
+    "joi": "^18.0.0",
+    "ts-jest": "^29.4.1",
+    "typescript": "^5.9.2"
   }
 }

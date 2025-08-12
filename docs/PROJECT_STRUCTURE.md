@@ -55,26 +55,31 @@ hahow-homework/
 ## 核心功能模組
 
 ### Authentication Module
+
 - Header 驗證 (`Name: hahow`, `Password: rocks`)
 - 上游 API 身份確認
 
-### Hero Service Module  
+### Hero Service Module
+
 - 英雄資料取得與整合
 - 基本資料與能力值合併
 
 ### API Response Module
+
 - 根據驗證狀態回傳對應資料
 - 統一錯誤處理
 
 ## 資料流向
 
 ### 未驗證請求
+
 ```
 Client → Heroes Controller → Hero Service → Hahow API
 基本資料 (id, name, image) ← ← ← ←
 ```
 
-### 已驗證請求  
+### 已驗證請求
+
 ```
 Client → Auth Middleware → Heroes Controller → Hero Service → Hahow API
 完整資料 (基本 + profile) ← ← ← ← ←
