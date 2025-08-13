@@ -11,8 +11,6 @@ class HeroService {
       throw error;
     }
   }
-
-  async getHeroById(heroId: string): Promise<any> {}
 }
 
 export const heroService = new HeroService();
