@@ -21,14 +21,10 @@ export const getHeroById = async (
   next: NextFunction,
 ): Promise<void> => {
   try {
-    const { heroId } = req.params;
+    const { id } = req.params;
 
-    // if (!heroId) {
-    //   return sendError(res, '英雄 ID 不能為空', 400);
-    // }
-
-    // const hero = await heroService.getHeroById();
-    sendSuccess(res, 123);
+    const hero = await heroService.getHeroById(Number(id));
+    sendSuccess(res, hero);
   } catch (error) {
     next(error);
   }
