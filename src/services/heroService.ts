@@ -58,6 +58,30 @@ class HeroService {
     }
   }
 
+  async getHeroByIdWithProfile(heroId: number): Promise<any> {
+    try {
+      // Fetch hero by ID
+      const heroResponse = await axios.get(
+        `${process.env.HAHOW_API_URL}/heroes/${heroId}`,
+      );
+      const hero: any = heroResponse.data;
+
+      // Fetch hero profile
+      try {
+        const profile = await this.getHeroesProfileById(heroId);
+        return { ...hero, profile };
+      } catch (profileError) {
+        console.warn(
+          `Failed to fetch profile for hero ${heroId}:`,
+          profileError,
+        );
+        return hero;
+      }
+    } catch (error: any) {
+      throw error;
+    }
+  }
+
   async getHeroesProfileById(id: Number): Promise<any> {
     try {
       const url = `${process.env.HAHOW_API_URL}/heroes/${id}/profile`;

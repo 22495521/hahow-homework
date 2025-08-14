@@ -32,8 +32,17 @@ export const getHeroById = async (
   try {
     const { id } = req.params;
 
-    const hero = await heroService.getHeroById(Number(id));
-    sendSuccess(res, hero);
+    const isAuth = req.isAuthenticated;
+
+    if (isAuth) {
+      const heroes = await heroService.getHeroByIdWithProfile(Number(id));
+      sendSuccess(res, heroes);
+    }
+
+    if (!isAuth) {
+      const hero = await heroService.getHeroById(Number(id));
+      sendSuccess(res, hero);
+    }
   } catch (error) {
     next(error);
   }
