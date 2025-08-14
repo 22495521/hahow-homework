@@ -176,10 +176,6 @@ src/
 - **supertest**: HTTP 斷言庫，用於測試 Express 應用程式
 - **ts-jest**: Jest 的 TypeScript 支援
 
-### 型別定義
-
-- **@types/\*\*\***: 各種套件的 TypeScript 型別定義檔
-
 ---
 
 ## API 規格
@@ -317,7 +313,7 @@ npm test
 
 ---
 
-## 上游 API 資源
+## API 資源
 
 - `https://hahow-recruit.herokuapp.com/heroes` - 英雄列表
 - `https://hahow-recruit.herokuapp.com/heroes/:heroId` - 單一英雄基本資料
