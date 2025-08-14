@@ -38,7 +38,7 @@ describe('Hero Controller', () => {
           data: mockHeroes,
         });
         expect(mockedHeroService.getHeroesNoProfile).toHaveBeenCalledTimes(1);
-        expect(mockedHeroService.getHeroesHaveProfile).not.toHaveBeenCalled();
+        expect(mockedHeroService.getHeroesWithProfile).not.toHaveBeenCalled();
       });
 
       it('should handle service errors when not authenticated', async () => {
@@ -60,12 +60,12 @@ describe('Hero Controller', () => {
           error: expect.any(String),
         });
         expect(mockedHeroService.getHeroesNoProfile).toHaveBeenCalledTimes(1);
-        expect(mockedHeroService.getHeroesHaveProfile).not.toHaveBeenCalled();
+        expect(mockedHeroService.getHeroesWithProfile).not.toHaveBeenCalled();
       });
     });
 
     describe('when user is authenticated', () => {
-      it('should call getHeroesHaveProfile and return hero data with profile', async () => {
+      it('should call getHeroesWithProfile and return hero data with profile', async () => {
         const mockHeroesWithProfile = [
           {
             id: '1',
@@ -86,7 +86,7 @@ describe('Hero Controller', () => {
           next();
         });
 
-        mockedHeroService.getHeroesHaveProfile.mockResolvedValue(
+        mockedHeroService.getHeroesWithProfile.mockResolvedValue(
           mockHeroesWithProfile,
         );
 
@@ -100,7 +100,7 @@ describe('Hero Controller', () => {
           success: true,
           data: mockHeroesWithProfile,
         });
-        expect(mockedHeroService.getHeroesHaveProfile).toHaveBeenCalledTimes(1);
+        expect(mockedHeroService.getHeroesWithProfile).toHaveBeenCalledTimes(1);
         expect(mockedHeroService.getHeroesNoProfile).not.toHaveBeenCalled();
       });
 
@@ -112,7 +112,7 @@ describe('Hero Controller', () => {
           next();
         });
 
-        mockedHeroService.getHeroesHaveProfile.mockRejectedValue(
+        mockedHeroService.getHeroesWithProfile.mockRejectedValue(
           new Error(errorMessage),
         );
 
@@ -126,7 +126,7 @@ describe('Hero Controller', () => {
           success: false,
           error: expect.any(String),
         });
-        expect(mockedHeroService.getHeroesHaveProfile).toHaveBeenCalledTimes(1);
+        expect(mockedHeroService.getHeroesWithProfile).toHaveBeenCalledTimes(1);
         expect(mockedHeroService.getHeroesNoProfile).not.toHaveBeenCalled();
       });
     });

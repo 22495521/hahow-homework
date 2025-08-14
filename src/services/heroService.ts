@@ -12,11 +12,19 @@ class HeroService {
     }
   }
 
-  async getHeroesHaveProfile(): Promise<any> {
+  async getHeroesWithProfile(): Promise<any> {
     try {
-      return '123';
+      const heroList = await this.getHeroesNoProfile();
 
-      // return response.data;
+      // Fetch profile for each hero
+      const heroesWithProfile = await Promise.all(
+        heroList.map(async (hero: any) => {
+          const profile = await this.getHeroesProfileById(hero.id);
+          return { ...hero, profile };
+        }),
+      );
+
+      return heroesWithProfile;
     } catch (error: any) {
       throw error;
     }

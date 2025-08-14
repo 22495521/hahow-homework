@@ -13,7 +13,7 @@ export const getHeroes = async (
     console.log(isAuth);
 
     if (isAuth) {
-      const heroes = await heroService.getHeroesHaveProfile();
+      const heroes = await heroService.getHeroesWithProfile();
       sendSuccess(res, heroes);
     }
 
