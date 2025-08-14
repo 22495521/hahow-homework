@@ -312,10 +312,3 @@ npm test
 - 建立統一的錯誤處理中介層
 
 ---
-
-## API 資源
-
-- `https://hahow-recruit.herokuapp.com/heroes` - 英雄列表
-- `https://hahow-recruit.herokuapp.com/heroes/:heroId` - 單一英雄基本資料
-- `https://hahow-recruit.herokuapp.com/heroes/:heroId/profile` - 英雄能力值資料
-- `https://hahow-recruit.herokuapp.com/auth` - 驗證端點
