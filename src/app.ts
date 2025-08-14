@@ -5,12 +5,14 @@ import { authMiddleware } from './middleware/auth';
 import { heroRoutes } from './routes/heroes';
 import { healthRoutes } from './routes/health';
 import { errorHandler, notFoundHandler } from './middleware/errorHandler';
+import { logger } from './middleware/logger';
 
 const app = express();
 
 app.use(helmet());
 app.use(cors());
 app.use(express.json());
+app.use(logger);
 
 app.use('/health', healthRoutes);
 app.use(authMiddleware);

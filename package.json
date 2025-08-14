@@ -31,6 +31,7 @@
   "homepage": "https://github.com/22495521/hahow-homework#readme",
   "devDependencies": {
     "@types/helmet": "^0.0.48",
+    "@types/morgan": "^1.9.10",
     "@types/supertest": "^6.0.3",
     "@typescript-eslint/eslint-plugin": "^8.39.1",
     "@typescript-eslint/parser": "^8.39.1",
@@ -55,6 +56,7 @@
     "helmet": "^8.1.0",
     "jest": "^30.0.5",
     "joi": "^18.0.0",
+    "morgan": "^1.10.1",
     "ts-jest": "^29.4.1",
     "typescript": "^5.9.2"
   }
