@@ -1,7 +1,8 @@
 import morgan from 'morgan';
+import { Request, Response } from 'express';
 
 // 自訂 morgan 格式與顏色
-morgan.token('status', (req, res) => {
+morgan.token('status', (req: Request, res: Response) => {
   const status = res.statusCode;
   const color = status >= 500 ? 31 // red
     : status >= 400 ? 33 // yellow
@@ -11,7 +12,7 @@ morgan.token('status', (req, res) => {
   return `\x1b[${color}m${status}\x1b[0m`;
 });
 
-morgan.token('method', (req) => {
+morgan.token('method', (req: Request) => {
   const method = req.method;
   const color = method === 'GET' ? 32 // green
     : method === 'POST' ? 34 // blue
