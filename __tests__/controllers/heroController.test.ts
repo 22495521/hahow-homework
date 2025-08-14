@@ -1,10 +1,15 @@
 import request from 'supertest';
 import app from '../../src/app';
 import { heroService } from '../../src/services/heroService';
+import { authMiddleware } from '../../src/middleware/auth';
 
 jest.mock('../../src/services/heroService');
+jest.mock('../../src/middleware/auth');
 
 const mockedHeroService = heroService as jest.Mocked<typeof heroService>;
+const mockedAuthMiddleware = authMiddleware as jest.MockedFunction<
+  typeof authMiddleware
+>;
 
 describe('Hero Controller', () => {
   describe('GET /heroes', () => {
@@ -12,43 +17,118 @@ describe('Hero Controller', () => {
       jest.clearAllMocks();
     });
 
-    it('should return heroes data successfully', async () => {
-      const mockHeroes = [
-        { id: '1', name: 'Hero 1', image: 'hero1.jpg' },
-        { id: '2', name: 'Hero 2', image: 'hero2.jpg' },
-      ];
+    describe('when user is not authenticated', () => {
+      it('should call getHeroesNoProfile and return basic hero data', async () => {
+        const mockHeroes = [
+          { id: '1', name: 'Hero 1', image: 'hero1.jpg' },
+          { id: '2', name: 'Hero 2', image: 'hero2.jpg' },
+        ];
 
-      mockedHeroService.getHeroes.mockResolvedValue(mockHeroes);
+        mockedAuthMiddleware.mockImplementation(async (req: any, res, next) => {
+          req.isAuthenticated = false;
+          next();
+        });
 
-      const response = await request(app).get('/heroes').expect(200);
+        mockedHeroService.getHeroesNoProfile.mockResolvedValue(mockHeroes);
 
-      expect(response.body).toEqual({
-        success: true,
-        data: mockHeroes,
+        const response = await request(app).get('/heroes').expect(200);
+
+        expect(response.body).toEqual({
+          success: true,
+          data: mockHeroes,
+        });
+        expect(mockedHeroService.getHeroesNoProfile).toHaveBeenCalledTimes(1);
+        expect(mockedHeroService.getHeroesHaveProfile).not.toHaveBeenCalled();
       });
-      expect(mockedHeroService.getHeroes).toHaveBeenCalledTimes(1);
+
+      it('should handle service errors when not authenticated', async () => {
+        const errorMessage = 'Service unavailable';
+
+        mockedAuthMiddleware.mockImplementation(async (req: any, res, next) => {
+          req.isAuthenticated = false;
+          next();
+        });
+
+        mockedHeroService.getHeroesNoProfile.mockRejectedValue(
+          new Error(errorMessage),
+        );
+
+        const response = await request(app).get('/heroes').expect(500);
+
+        expect(response.body).toEqual({
+          success: false,
+          error: expect.any(String),
+        });
+        expect(mockedHeroService.getHeroesNoProfile).toHaveBeenCalledTimes(1);
+        expect(mockedHeroService.getHeroesHaveProfile).not.toHaveBeenCalled();
+      });
     });
 
-    it('should handle service errors', async () => {
-      const errorMessage = 'Service unavailable';
-      mockedHeroService.getHeroes.mockRejectedValue(new Error(errorMessage));
+    describe('when user is authenticated', () => {
+      it('should call getHeroesHaveProfile and return hero data with profile', async () => {
+        const mockHeroesWithProfile = [
+          {
+            id: '1',
+            name: 'Hero 1',
+            image: 'hero1.jpg',
+            profile: { str: 10, int: 8, agi: 12, luk: 6 },
+          },
+          {
+            id: '2',
+            name: 'Hero 2',
+            image: 'hero2.jpg',
+            profile: { str: 15, int: 5, agi: 8, luk: 10 },
+          },
+        ];
 
-      const response = await request(app).get('/heroes').expect(500);
+        mockedAuthMiddleware.mockImplementation(async (req: any, res, next) => {
+          req.isAuthenticated = true;
+          next();
+        });
 
-      expect(response.body).toEqual({
-        success: false,
-        error: expect.any(String),
+        mockedHeroService.getHeroesHaveProfile.mockResolvedValue(
+          mockHeroesWithProfile,
+        );
+
+        const response = await request(app)
+          .get('/heroes')
+          .set('Name', 'hahow')
+          .set('Password', 'rocks')
+          .expect(200);
+
+        expect(response.body).toEqual({
+          success: true,
+          data: mockHeroesWithProfile,
+        });
+        expect(mockedHeroService.getHeroesHaveProfile).toHaveBeenCalledTimes(1);
+        expect(mockedHeroService.getHeroesNoProfile).not.toHaveBeenCalled();
       });
-      expect(mockedHeroService.getHeroes).toHaveBeenCalledTimes(1);
-    });
 
-    it('should call heroService.getHeroes', async () => {
-      const mockHeroes: any[] = [];
-      mockedHeroService.getHeroes.mockResolvedValue(mockHeroes);
+      it('should handle service errors when authenticated', async () => {
+        const errorMessage = 'Service unavailable';
 
-      await request(app).get('/heroes').expect(200);
+        mockedAuthMiddleware.mockImplementation(async (req: any, res, next) => {
+          req.isAuthenticated = true;
+          next();
+        });
 
-      expect(mockedHeroService.getHeroes).toHaveBeenCalled();
+        mockedHeroService.getHeroesHaveProfile.mockRejectedValue(
+          new Error(errorMessage),
+        );
+
+        const response = await request(app)
+          .get('/heroes')
+          .set('Name', 'hahow')
+          .set('Password', 'rocks')
+          .expect(500);
+
+        expect(response.body).toEqual({
+          success: false,
+          error: expect.any(String),
+        });
+        expect(mockedHeroService.getHeroesHaveProfile).toHaveBeenCalledTimes(1);
+        expect(mockedHeroService.getHeroesNoProfile).not.toHaveBeenCalled();
+      });
     });
   });
 
@@ -89,7 +169,7 @@ describe('Hero Controller', () => {
     it('should handle non-existent hero ID', async () => {
       const axiosError = {
         response: { status: 404 },
-        isAxiosError: true
+        isAxiosError: true,
       };
       mockedHeroService.getHeroById.mockRejectedValue(axiosError);
 

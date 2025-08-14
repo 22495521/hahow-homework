@@ -8,14 +8,17 @@ export const getHeroes = async (
   next: NextFunction,
 ): Promise<void> => {
   try {
-    //是否為已驗證的請求
-    console.log(req.isAuthenticated);
+    const isAuth = req.isAuthenticated;
 
-    const pro = await heroService.getHeroesProfileById(1);
-    console.log(pro);
+    if (isAuth) {
+      const heroes = await heroService.getHeroesHaveProfile();
+      sendSuccess(res, heroes);
+    }
 
-    const heroes = await heroService.getHeroes();
-    sendSuccess(res, heroes);
+    if (!isAuth) {
+      const heroes = await heroService.getHeroesNoProfile();
+      sendSuccess(res, heroes);
+    }
   } catch (error) {
     next(error);
   }

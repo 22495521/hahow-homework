@@ -2,11 +2,23 @@ import axios from 'axios';
 import { Request } from 'express';
 
 class HeroService {
-  async getHeroes(): Promise<any> {
+  async getHeroesNoProfile(): Promise<any> {
     try {
-      // Fetch all heroes
-      const response = await axios.get(`${process.env.HAHOW_API_URL}/heroes`);
+      // Fetch all heroes without profile
+      const response = await axios.get(
+        `${process.env.HAHOW_API_URL}/heroes/noProfile`,
+      );
       return response.data;
+    } catch (error: any) {
+      throw error;
+    }
+  }
+
+  async getHeroesHaveProfile(): Promise<any> {
+    try {
+      return '123';
+
+      // return response.data;
     } catch (error: any) {
       throw error;
     }
