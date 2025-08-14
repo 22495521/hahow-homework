@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { Request } from 'express';
 
 class HeroService {
   async getHeroesNoProfile(): Promise<any> {
@@ -16,13 +15,30 @@ class HeroService {
     try {
       const heroList = await this.getHeroesNoProfile();
 
-      // Fetch profile for each hero
-      const heroesWithProfile = await Promise.all(
-        heroList.map(async (hero: any) => {
-          const profile = await this.getHeroesProfileById(hero.id);
-          return { ...hero, profile };
-        }),
-      );
+      // Process heroes in chunks
+      const CHUNK_SIZE = 5;
+      const heroesWithProfile = [];
+
+      for (let i = 0; i < heroList.length; i += CHUNK_SIZE) {
+        const chunk = heroList.slice(i, i + CHUNK_SIZE);
+
+        const chunkResults = await Promise.all(
+          chunk.map(async (hero: any) => {
+            try {
+              const profile = await this.getHeroesProfileById(hero.id);
+              return { ...hero, profile };
+            } catch (error) {
+              console.warn(
+                `Failed to fetch profile for hero ${hero.id}:`,
+                error,
+              );
+              return hero;
+            }
+          }),
+        );
+
+        heroesWithProfile.push(...chunkResults);
+      }
 
       return heroesWithProfile;
     } catch (error: any) {
