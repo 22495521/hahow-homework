@@ -5,9 +5,7 @@ class HeroService {
   async getHeroesNoProfile(): Promise<any> {
     try {
       // Fetch all heroes without profile
-      const response = await axios.get(
-        `${process.env.HAHOW_API_URL}/heroes/noProfile`,
-      );
+      const response = await axios.get(`${process.env.HAHOW_API_URL}/heroes`);
       return response.data;
     } catch (error: any) {
       throw error;

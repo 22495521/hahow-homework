@@ -10,6 +10,8 @@ export const getHeroes = async (
   try {
     const isAuth = req.isAuthenticated;
 
+    console.log(isAuth);
+
     if (isAuth) {
       const heroes = await heroService.getHeroesHaveProfile();
       sendSuccess(res, heroes);
